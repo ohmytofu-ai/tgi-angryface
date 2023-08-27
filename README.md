@@ -12,6 +12,7 @@ TGI is well suited for distributed/ cloud burst/ on-demand workloads, yet HF's f
 - Support Adapters (LORA/PEFT) without merging (possibly huge) Checkpoints and uploading them to 🤗 -> POC in https://github.com/ohmytofu-ai/tgi-angryface/commit/aba56c1343aa77ba0a07d14327d3e52736334308
 - Support last Gen GPUS (back to Pascal hopefully)
 - Reduce operational cost by making TGI-😑 an disposable, hot swapable workhorse
+- running a cluste of TGI nodes (via ray?)
 - Get back to a truyl open source license
 - Support more core frameworks than HF products
 
@@ -22,11 +23,12 @@ TGI is well suited for distributed/ cloud burst/ on-demand workloads, yet HF's f
 
 To use Llama 2 7B on a 1080 (Pascal Gen, Compute capability 6.1):
 1) Install this repository via `make install`
-2) Modify `server/Makefile` section `run-dev` and change the `/mnt/TOFU/HF_MODELS/` path to a path where you have downloaded a HF model via `git lfs clone https://huggingface.co/[repo]/[model]`. E.g. the model will be loaded as `/data/models/Llama-2-7b-chat-hf`
-3) open two terminals
-4) terminal 1: `make router-dev` (starts the router that exposes the model at localhost:8080)
-5) terminal 2: `make server-dev` (starts the model server, loads the model to the GPU)
-6) test the model by calling it with CURL `curl localhost:8080/generate     -X POST     -d '{"inputs":"What is Deep Learning?","parameters":{"max_new_tokens":90}}'     -H 'Content-Type: application/json'`
+2) Install each the latest transformers, bitsandbytes, accelerate via `pip3 install git+https://repo/project`
+3) Modify `server/Makefile` section `run-dev` and change the `/mnt/TOFU/HF_MODELS/` path to a path where you have downloaded a HF model via `git lfs clone https://huggingface.co/[repo]/[model]`. E.g. the model will be loaded as `/data/models/Llama-2-7b-chat-hf`
+4) open two terminals
+5) terminal 1: `make router-dev` (starts the router that exposes the model at localhost:8080)
+6) terminal 2: `make server-dev` (starts the model server, loads the model to the GPU)
+7) test the model by calling it with CURL `curl localhost:8080/generate     -X POST     -d '{"inputs":"What is Deep Learning?","parameters":{"max_new_tokens":90}}'     -H 'Content-Type: application/json'`
 <div align="center">
 
 ![image](https://github.com/huggingface/text-generation-inference/assets/3841370/38ba1531-ea0d-4851-b31a-a6d4ddc944b0)
