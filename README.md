@@ -9,7 +9,7 @@ TGI is well suited for distributed/ cloud burst/ on-demand workloads, yet HF's f
 ## Goals
 - ☑️ loads LLama2 in 4bit on a Pascal GPU (1080, Llama 2 7B)
 - Support Model loading from wherever you want (HDFS, S3, HTTPS, …)
-- Support Adapters (LORA/PEFT) without merging (possibly huge) Checkpoints and uploading them to 🤗 -> POC in https://github.com/ohmytofu-ai/tgi-angryface/commit/aba56c1343aa77ba0a07d14327d3e52736334308
+- ☑️ Support Adapters (LORA/PEFT) without merging (possibly huge) Checkpoints and uploading them to 🤗
 - Support last Gen GPUS (back to Pascal hopefully)
 - Reduce operational cost by making TGI-😑 an disposable, hot swapable workhorse
 - running a cluste of TGI nodes (via ray?)
@@ -31,7 +31,14 @@ To use Llama 2 7B on a 1080 (Pascal Gen, Compute capability 6.1):
 
 
 ## LLama with PEFT
+### Production
+to compile run `make install-launcher`
+run the `text-generation-launcher --model-id meta-llama/Llama-2-7b-hf --port 8080 --quantize bitsandbytes --peft-model-path /my-models/my-peft`
+The `--peft-model-path` folder should contain a `adater_config.json` file.
+
+### Development
 append `--peft-model-path /my/local/peft-adapter-folder` to  the `run-dev` command inside `server/Makefile` and follow the steps indicated inside the prev. section. The folder should contain a `adater_config.json` file.
+
 
 <div align="center">
 
