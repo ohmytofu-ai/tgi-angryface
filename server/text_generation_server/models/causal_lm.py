@@ -1,10 +1,13 @@
 import torch
 import inspect
-
+import json
+  
 from dataclasses import dataclass
 from opentelemetry import trace
-from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizerBase
+from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizerBase, BitsAndBytesConfig
 from typing import Optional, Tuple, List, Type, Dict
+from pathlib import Path
+from peft import PeftModelForCausalLM, get_peft_config, PeftConfig
 
 from text_generation_server.models import Model
 from text_generation_server.models.types import (
@@ -456,6 +459,7 @@ class CausalLM(Model):
         quantize: Optional[str] = None,
         dtype: Optional[torch.dtype] = None,
         trust_remote_code: bool = False,
+        peft_model_path: Optional[Path] = None , 
     ):
         if torch.cuda.is_available():
             device = torch.device("cuda")
@@ -474,16 +478,37 @@ class CausalLM(Model):
             truncation_side="left",
             trust_remote_code=trust_remote_code,
         )
+
+        should_quantize = quantize == "bitsandbytes" 
+        if should_quantize:
+            quantization_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_compute_dtype=torch.float16
+            )
+
+        has_peft_model = peft_model_path is not None
+
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             revision=revision,
             torch_dtype=dtype,
-            device_map="auto"
-            if torch.cuda.is_available() and torch.cuda.device_count() > 1
-            else None,
-            load_in_4bit=quantize == "bitsandbytes",
+            device_map="auto" if torch.cuda.is_available() and torch.cuda.device_count() > 1 else None,
+            load_in_4bit= False if not should_quantize else None,
+            quantization_config = quantization_config if should_quantize else None,
             trust_remote_code=trust_remote_code,
         )
+        if has_peft_model:
+            with open(f'{peft_model_path}/adapter_config.json') as config_file:
+                config  = json.load(config_file)
+                # patch to a local path
+                config["base_model_name_or_path"] = model_id
+                # conver to peft model
+                peft_config = get_peft_config(config)
+                model = PeftModelForCausalLM(model, peft_config)
+                ## Llama does not have a load_adapter method - we need to think about hot swapping here and implement this for Llama
+                # model.load_adapter(peft_model_id_or_path)
+                # model.enable_adapters()
+
         ## ValueError: Calling `cuda()` is not supported for `4-bit` or `8-bit` quantized models. Please use the model as it is, since the model has already been set to the correct devices and casted to the correct `dtype`.
         # if torch.cuda.is_available() and torch.cuda.device_count() == 1:
             # model = model.cuda()

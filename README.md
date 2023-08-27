@@ -18,7 +18,6 @@ TGI is well suited for distributed/ cloud burst/ on-demand workloads, yet HF's f
 
 `</endOfMissionStatement>`
 
-
 # 🦙 LLama 2 in 4bit
 
 To use Llama 2 7B on a 1080 (Pascal Gen, Compute capability 6.1):
@@ -29,6 +28,11 @@ To use Llama 2 7B on a 1080 (Pascal Gen, Compute capability 6.1):
 5) terminal 1: `make router-dev` (starts the router that exposes the model at localhost:8080)
 6) terminal 2: `make server-dev` (starts the model server, loads the model to the GPU)
 7) test the model by calling it with CURL `curl localhost:8080/generate     -X POST     -d '{"inputs":"What is Deep Learning?","parameters":{"max_new_tokens":90}}'     -H 'Content-Type: application/json'`
+
+
+## LLama with PEFT
+append `--peft-model-path /my/local/peft-adapter-folder` to  the `run-dev` command inside `server/Makefile` and follow the steps indicated inside the prev. section. The folder should contain a `adater_config.json` file.
+
 <div align="center">
 
 ![image](https://github.com/huggingface/text-generation-inference/assets/3841370/38ba1531-ea0d-4851-b31a-a6d4ddc944b0)
