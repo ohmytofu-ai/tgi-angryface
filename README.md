@@ -16,7 +16,14 @@ TGI is well suited for distributed/ cloud burst/ on-demand workloads, yet HF's f
 `</endOfMissionStatement>`
 
 ## LLama with PEFT
+### Production
+to compile run `make install-launcher`
+run the `text-generation-launcher --model-id meta-llama/Llama-2-7b-hf --port 8080 --quantize bitsandbytes --peft-model-path /my-models/my-peft`
+The `--peft-model-path` folder should contain a `adater_config.json` file.
+
+### Development
 append `--peft-model-path /my/local/peft-adapter-folder` to  the `run-dev` command inside `server/Makefile` and follow the steps indicated inside the prev. section. The folder should contain a `adater_config.json` file.
+
 
 <div align="center">
 
