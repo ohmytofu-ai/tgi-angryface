@@ -3,3 +3,4 @@ target
 router/tokenizer.json
 *__pycache__*
 CUSTOM_MODELS/**
+build_docker.sh
