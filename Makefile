@@ -43,7 +43,7 @@ python-client-tests:
 python-tests: python-server-tests python-client-tests
 
 run-llama-peft:
-	text-generation-launcher --model-id meta-llama/Llama-2-7b-chat-hf --port 8080 --quantize bitsandbytes --peft-model-path /mnt/TOFU/HF_MODELS/Llama-2-7b-chat-hf-function-calling-adapters-v2
+	text-generation-launcher --model-id meta-llama/Llama-2-7b-chat-hf --port 8080 --quantize bitsandbytes --peft-model-path /mnt/TOFU/HF_MODELS/asknature_llama2_7b_lora_weights_10_2048
 	#/mnt/TOFU/text-generation-inference/CUSTOM_MODELS/asknature-llama2-70b
 run-falcon-7b-instruct:
 	text-generation-launcher --model-id tiiuae/falcon-7b-instruct --port 8080
