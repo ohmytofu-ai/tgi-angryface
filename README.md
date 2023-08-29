@@ -40,6 +40,10 @@ The `--peft-model-path` folder should contain a `adater_config.json` file.
 append `--peft-model-path /my/local/peft-adapter-folder` to  the `run-dev` command inside `server/Makefile` and follow the steps indicated inside the prev. section. The folder should contain a `adater_config.json` file.
 
 
+### Docker
+You can bake a custom local PEFT model into your very own TGI container by copying your model into `CUSTOM_MODELS` and run `docker build -t me/my-image-name -f Dockerfile.bake-peft-into-container`. Then run it as usual (see below) but substitute the huggingface container image with your very fresh `me/my-image-name` image.  
+
+
 <div align="center">
 
 ![image](https://github.com/huggingface/text-generation-inference/assets/3841370/38ba1531-ea0d-4851-b31a-a6d4ddc944b0)
