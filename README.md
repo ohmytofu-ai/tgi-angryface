@@ -41,7 +41,7 @@ append `--peft-model-path /my/local/peft-adapter-folder` to  the `run-dev` comma
 
 
 ### Docker
-You can bake a custom local PEFT model into your very own TGI container by copying your model into `CUSTOM_MODELS` and run `docker build -t me/my-image-name -f Dockerfile.bake-peft-into-container`. Then run it as usual (see below) but substitute the huggingface container image with your very fresh `me/my-image-name` image.  
+You can bake a custom local PEFT model into your very own TGI container by copying your model into `CUSTOM_MODELS` and run `docker build -t me/my-image-name -f Dockerfile.bake-peft-into-container .`. Then run it as usual (see below) but substitute the huggingface container image with your very fresh `me/my-image-name` image.  
 
 
 <div align="center">
